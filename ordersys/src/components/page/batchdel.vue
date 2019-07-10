@@ -20,7 +20,7 @@
               text-color="#000"
               active-text-color="#409EFF"
             >
-              <el-menu-item index="1">
+              <el-menu-item index="1" @click="gostatus">
                 <img src alt />
                 <!-- <i class="el-icon-s-order"></i> -->
                 <img
@@ -175,6 +175,9 @@ export default {
         this.axios.post('supplier.php?c=index&a=login_out').then(res=>{
           window.location.href ="supplier.php?c=index&a=index";
         })
+      },
+      gostatus(){
+        this.$router.go(-1)
       },
       handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
