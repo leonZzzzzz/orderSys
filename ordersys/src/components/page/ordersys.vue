@@ -62,10 +62,13 @@
             <!-- 筛选 -->
             <el-form ref="form" :model="form" label-width="80px">
               <el-form-item label="订单号">
-                <el-input style="width:300px" v-model="order_no"></el-input>
+                <el-input style="width:230px" v-model="order_no"></el-input>
               </el-form-item>
               <el-form-item label="商品名称">
-                <el-input style="width:300px" v-model="goods_name"></el-input>
+                <el-input style="width:230px" v-model="goods_name"></el-input>
+              </el-form-item>
+              <el-form-item label="商品编号">
+                <el-input style="width:230px" v-model="goods_code"></el-input>
               </el-form-item>
               <el-form-item label="起止时间">
                 <el-col :span="4.5">
@@ -75,7 +78,7 @@
                     type="datetime"
                     placeholder="选择日期"
                     :picker-options="pickerOptions1"
-                    style="width: 300px;margin-right:10px;"
+                    style="width: 230px;margin-right:10px;"
                   ></el-date-picker>
                   <!-- <el-date-picker type="date" placeholder="选择日期" style="width: 100%;"></el-date-picker> -->
                 </el-col>
@@ -87,7 +90,7 @@
                     type="datetime"
                     placeholder="选择日期"
                     :picker-options="pickerOptions1"
-                    style="width:300px;margin-left:10px;"
+                    style="width:230px;margin-left:10px;"
                   ></el-date-picker>
                 </el-col>
               </el-form-item>
@@ -106,6 +109,14 @@
                   <template scope="scope">
                     <span v-for="(item,index) in scope.row.product_list">
                       {{item.name}}
+                      <br />
+                    </span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="商品编号">
+                  <template scope="scope">
+                    <span v-for="(item,index) in scope.row.product_list">
+                      {{item.code}}
                       <br />
                     </span>
                   </template>
@@ -164,10 +175,13 @@
             <!-- 筛选 -->
             <el-form ref="form" :model="form" label-width="80px">
               <el-form-item label="订单号">
-                <el-input style="width:300px" v-model="order_no2"></el-input>
+                <el-input style="width:230px" v-model="order_no2"></el-input>
               </el-form-item>
               <el-form-item label="商品名称">
-                <el-input style="width:300px" v-model="goods_name2"></el-input>
+                <el-input style="width:230px" v-model="goods_name2"></el-input>
+              </el-form-item>
+              <el-form-item label="商品编号">
+                <el-input style="width:230px" v-model="goods_code2"></el-input>
               </el-form-item>
               <el-form-item label="起止时间">
                 <el-col :span="4.5">
@@ -177,7 +191,7 @@
                     type="datetime"
                     placeholder="选择日期"
                     :picker-options="pickerOptions1"
-                    style="width: 300px;margin-right:10px;"
+                    style="width: 230px;margin-right:10px;"
                   ></el-date-picker>
                   <!-- <el-date-picker type="date" placeholder="选择日期" style="width: 100%;"></el-date-picker> -->
                 </el-col>
@@ -189,7 +203,7 @@
                     type="datetime"
                     placeholder="选择日期"
                     :picker-options="pickerOptions1"
-                    style="width:300px;margin-left:10px;"
+                    style="width:230px;margin-left:10px;"
                   ></el-date-picker>
                 </el-col>
               </el-form-item>
@@ -205,6 +219,7 @@
                 <el-table-column fixed prop="return_no" label="退货单号"></el-table-column>
                 <el-table-column fixed prop="order_no" label="订单号"></el-table-column>
                 <el-table-column prop="name" label="商品名称"></el-table-column>
+                <el-table-column prop="code" label="商品编号"></el-table-column>
                 <el-table-column prop="pro_num" label="数量" width="50px"></el-table-column>
                 <el-table-column prop="sku_data" label="商品规格"></el-table-column>
                 <el-table-column prop="supplier_status_msg" label="状态"></el-table-column>
@@ -236,10 +251,13 @@
             <!-- 筛选 -->
             <el-form ref="form" :model="form" label-width="80px">
               <el-form-item label="订单号">
-                <el-input style="width:300px" v-model="order_no3"></el-input>
+                <el-input style="width:230px" v-model="order_no3"></el-input>
               </el-form-item>
               <el-form-item label="商品名称">
-                <el-input style="width:300px" v-model="goods_name3"></el-input>
+                <el-input style="width:230px" v-model="goods_name3"></el-input>
+              </el-form-item>
+              <el-form-item label="商品编号">
+                <el-input style="width:230px" v-model="goods_code3"></el-input>
               </el-form-item>
               <el-form-item label="起止时间">
                 <el-col :span="4.5">
@@ -249,7 +267,7 @@
                     type="datetime"
                     placeholder="选择日期"
                     :picker-options="pickerOptions1"
-                    style="width: 300px;margin-right:10px;"
+                    style="width: 230px;margin-right:10px;"
                   ></el-date-picker>
                   <!-- <el-date-picker type="date" placeholder="选择日期" style="width: 100%;"></el-date-picker> -->
                 </el-col>
@@ -261,7 +279,7 @@
                     type="datetime"
                     placeholder="选择日期"
                     :picker-options="pickerOptions1"
-                    style="width:300px;margin-left:10px;"
+                    style="width:230px;margin-left:10px;"
                   ></el-date-picker>
                 </el-col>
               </el-form-item>
@@ -277,6 +295,7 @@
                 <el-table-column fixed prop="return_no" label="换货单号"></el-table-column>
                 <el-table-column fixed prop="order_no" label="订单号"></el-table-column>
                 <el-table-column prop="name" label="商品名称"></el-table-column>
+                <el-table-column prop="code" label="商品编号"></el-table-column>
                 <el-table-column prop="pro_num" label="数量" width="50px"></el-table-column>
                 <el-table-column prop="sku_data" label="商品规格"></el-table-column>
                 <el-table-column prop="supplier_status_msg" label="状态"></el-table-column>
@@ -316,10 +335,13 @@
             <!-- 筛选 -->
             <el-form ref="form" :model="form" label-width="80px">
               <el-form-item label="订单号">
-                <el-input style="width:300px" v-model="order_no4"></el-input>
+                <el-input style="width:230px" v-model="order_no4"></el-input>
               </el-form-item>
               <el-form-item label="商品名称">
-                <el-input style="width:300px" v-model="goods_name4"></el-input>
+                <el-input style="width:230px" v-model="goods_name4"></el-input>
+              </el-form-item>
+              <el-form-item label="商品编号">
+                <el-input style="width:230px" v-model="goods_code4"></el-input>
               </el-form-item>
               <el-form-item label="起止时间">
                 <el-col :span="4.5">
@@ -329,7 +351,7 @@
                     type="datetime"
                     placeholder="选择日期"
                     :picker-options="pickerOptions1"
-                    style="width: 300px;margin-right:10px;"
+                    style="width: 230px;margin-right:10px;"
                   ></el-date-picker>
                   <!-- <el-date-picker type="date" placeholder="选择日期" style="width: 100%;"></el-date-picker> -->
                 </el-col>
@@ -341,7 +363,7 @@
                     type="datetime"
                     placeholder="选择日期"
                     :picker-options="pickerOptions1"
-                    style="width:300px;margin-left:10px;"
+                    style="width:230px;margin-left:10px;"
                   ></el-date-picker>
                 </el-col>
               </el-form-item>
@@ -357,6 +379,7 @@
                 <el-table-column fixed prop="return_no" label="补发货单号"></el-table-column>
                 <el-table-column fixed prop="order_no" label="订单号"></el-table-column>
                 <el-table-column prop="name" label="商品名称"></el-table-column>
+                <el-table-column prop="code" label="商品编号"></el-table-column>
                 <el-table-column prop="pro_num" label="数量" width="50px"></el-table-column>
                 <el-table-column prop="sku_data" label="商品规格"></el-table-column>
                 <el-table-column prop="supplier_status_msg" label="状态"></el-table-column>
@@ -389,10 +412,13 @@
             <!-- 筛选 -->
             <el-form ref="form" :model="form" label-width="80px">
               <el-form-item label="订单号">
-                <el-input style="width:300px" v-model="order_no5"></el-input>
+                <el-input style="width:230px" v-model="order_no5"></el-input>
               </el-form-item>
               <el-form-item label="商品名称">
-                <el-input style="width:300px" v-model="goods_name5"></el-input>
+                <el-input style="width:230px" v-model="goods_name5"></el-input>
+              </el-form-item>
+              <el-form-item label="商品编号">
+                <el-input style="width:230px" v-model="goods_code5"></el-input>
               </el-form-item>
               <el-form-item label="起止时间">
                 <el-col :span="4.5">
@@ -402,7 +428,7 @@
                     type="datetime"
                     placeholder="选择日期"
                     :picker-options="pickerOptions1"
-                    style="width: 300px;margin-right:10px;"
+                    style="width: 230px;margin-right:10px;"
                   ></el-date-picker>
                   <!-- <el-date-picker type="date" placeholder="选择日期" style="width: 100%;"></el-date-picker> -->
                 </el-col>
@@ -414,7 +440,7 @@
                     type="datetime"
                     placeholder="选择日期"
                     :picker-options="pickerOptions1"
-                    style="width:300px;margin-left:10px;"
+                    style="width:230px;margin-left:10px;"
                   ></el-date-picker>
                 </el-col>
               </el-form-item>
@@ -432,6 +458,14 @@
                   <template scope="scope">
                     <span v-for="(item,index) in scope.row.product_list">
                       {{item.name}}
+                      <br />
+                    </span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="商品编号">
+                  <template scope="scope">
+                    <span v-for="(item,index) in scope.row.product_list">
+                      {{item.code}}
                       <br />
                     </span>
                   </template>
@@ -624,6 +658,11 @@ export default {
       goods_name3: '',
       goods_name4: '',
       goods_name5: '',
+      goods_code:'',
+      goods_code2:'',
+      goods_code3:'',
+      goods_code4:'',
+      goods_code5:'',
       value1: '',
       value2: '',
       value3: '',
@@ -869,31 +908,36 @@ export default {
       if(this.type==1){
         var order_no = this.order_no;
         var goods_name = this.goods_name;
+        var goods_code = this.goods_code
         var startdate = this.$moment(this.value1).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
         var enddate = this.$moment(this.value2).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
       }else if(this.type==2){
         var order_no = this.order_no2;
         var goods_name = this.goods_name2;
+        var goods_code = this.goods_code2
         var startdate = this.$moment(this.value3).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
         var enddate = this.$moment(this.value4).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
       }else if(this.type==3){
         var order_no = this.order_no3;
         var goods_name = this.goods_name3;
+        var goods_code = this.goods_code3
         var startdate = this.$moment(this.value5).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
         var enddate = this.$moment(this.value6).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
       }else if(this.type==4){
         var order_no = this.order_no4;
         var goods_name = this.goods_name4;
+        var goods_code = this.goods_code4
         var startdate = this.$moment(this.value7).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
         var enddate = this.$moment(this.value8).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
       }else if(this.type==5){
         var order_no = this.order_no5;
         var goods_name = this.goods_name5;
+        var goods_code = this.goods_code5
         console.log(order_no,goods_name)
         var startdate = this.$moment(this.value9).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
         var enddate = this.$moment(this.value10).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
       }
-      var params = { type: this.type, supplier_id: this.id, order_no: order_no, goods_name: goods_name, start_time: startdate, end_time: enddate, p: this.page };
+      var params = { code:goods_code,type: this.type, supplier_id: this.id, order_no: order_no, goods_name: goods_name, start_time: startdate, end_time: enddate, p: this.page };
       this.axios.post(this.mainUrl+'supplier.php?c=order&a=supplier_order', qs.stringify(params)).then(res => {
         console.log(res, params)
         let { err_code, err_msg } = res.data;
@@ -918,31 +962,36 @@ export default {
      if(this.type==1){
         var order_no = this.order_no;
         var goods_name = this.goods_name;
+        var goods_code = this.goods_code
         var startdate = this.$moment(this.value1).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
         var enddate = this.$moment(this.value2).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
       }else if(this.type==2){
         var order_no = this.order_no2;
         var goods_name = this.goods_name2;
+        var goods_code = this.goods_code2
         var startdate = this.$moment(this.value3).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
         var enddate = this.$moment(this.value4).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
       }else if(this.type==3){
         var order_no = this.order_no3;
         var goods_name = this.goods_name3;
+        var goods_code = this.goods_code3
         var startdate = this.$moment(this.value5).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
         var enddate = this.$moment(this.value6).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
       }else if(this.type==4){
         var order_no = this.order_no4;
         var goods_name = this.goods_name4;
+        var goods_code = this.goods_code4
         var startdate = this.$moment(this.value7).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
         var enddate = this.$moment(this.value8).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
       }else if(this.type==5){
         var order_no = this.order_no5;
         var goods_name = this.goods_name5;
+        var goods_code = this.goods_code5
         console.log(order_no,goods_name)
         var startdate = this.$moment(this.value9).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
         var enddate = this.$moment(this.value10).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
       }
-      var params = { type: this.type, supplier_id: this.id, order_no: order_no, goods_name: goods_name, start_time: startdate, end_time: enddate, p: this.page };
+      var params = {code:goods_code, type: this.type, supplier_id: this.id, order_no: order_no, goods_name: goods_name, start_time: startdate, end_time: enddate, p: this.page };
       this.axios.post(this.mainUrl+'supplier.php?c=order&a=supplier_order', qs.stringify(params)).then(res => {
         console.log(res, params)
         if(typeof(res.data)=='string'){
@@ -970,6 +1019,7 @@ export default {
     handleClick(tab, event) {
       var eventid = event.target.getAttribute('id');
       console.log(eventid)
+      this.page=1;
       if (eventid == 'tab-second') {
         this.type = 2
       } else if (eventid == 'tab-third') {
@@ -988,8 +1038,10 @@ export default {
       this.type = 1
       this.order_no='';
       this.goods_name='';
+      this.goods_code='';
       this.value1='';
       this.value2='';
+      this.page=1;
       this.oninit()
     },
     waitSal(){
@@ -997,8 +1049,10 @@ export default {
       this.type=2;
       this.order_no2='';
       this.goods_name2='';
+      this.goods_code2='';
       this.value3='';
       this.value4='';
+      this.page=1;
       this.oninit()
     },
     waitChang(){
@@ -1006,8 +1060,10 @@ export default {
       this.type = 3;
       this.order_no3='';
       this.goods_name3='';
+      this.goods_code3='';
       this.value5='';
       this.value6='';
+      this.page=1;
       this.oninit();
     },
     waitReis(){
@@ -1015,8 +1071,10 @@ export default {
       this.type = 4;
       this.order_no4='';
       this.goods_name4='';
+      this.goods_code4='';
       this.value7='';
       this.value8='';
+      this.page=1;
       this.oninit()
     },
 
@@ -1072,7 +1130,7 @@ export default {
 
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
-      this.page = val;
+      // this.page = val;
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
@@ -1089,31 +1147,36 @@ export default {
         if(this.type==1){
         var order_no = this.order_no;
         var goods_name = this.goods_name;
+        var goods_code = this.goods_code
         var startdate = this.$moment(this.value1).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
         var enddate = this.$moment(this.value2).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
       }else if(this.type==2){
         var order_no = this.order_no2;
         var goods_name = this.goods_name2;
+        var goods_code = this.goods_code2
         var startdate = this.$moment(this.value3).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
         var enddate = this.$moment(this.value4).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
       }else if(this.type==3){
         var order_no = this.order_no3;
         var goods_name = this.goods_name3;
+        var goods_code = this.goods_code3
         var startdate = this.$moment(this.value5).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
         var enddate = this.$moment(this.value6).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
       }else if(this.type==4){
         var order_no = this.order_no4;
         var goods_name = this.goods_name4;
+        var goods_code = this.goods_code4
         var startdate = this.$moment(this.value7).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
         var enddate = this.$moment(this.value8).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
       }else if(this.type==5){
         var order_no = this.order_no5;
         var goods_name = this.goods_name5;
+        var goods_code = this.goods_code5
         var startdate = this.$moment(this.value9).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
         var enddate = this.$moment(this.value10).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
       }
         
-        var params = { type: this.type, supplier_id: this.id, order_no: order_no, goods_name: goods_name, start_time: startdate, end_time: enddate };
+        var params = { code:goods_code,type: this.type, supplier_id: this.id, order_no: order_no, goods_name: goods_name, start_time: startdate, end_time: enddate };
         if (this.type == 2 || this.type == 3 || this.type == 4) {
           var url = this.mainUrl+"supplier.php?c=order&a=out_return"
         } else if (this.type == 1 || this.type == 5) {
@@ -1124,7 +1187,7 @@ export default {
           console.log(res, params)
           let { err_code, err_msg } = res.data;
           if (err_code == 0) {
-            url += "&type=" + this.type + "&supplier_id=" + this.id + "&order_no=" + order_no + "&goods_name=" + goods_name + "&start_time=" + startdate + "&end_time=" + enddate;
+            url += "&code=" + goods_code + "&type=" + this.type + "&supplier_id=" + this.id + "&order_no=" + order_no + "&goods_name=" + goods_name + "&start_time=" + startdate + "&end_time=" + enddate;
             window.location.href = url;
           } else {
             this.$message({
