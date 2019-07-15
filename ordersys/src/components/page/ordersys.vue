@@ -153,7 +153,7 @@
                 <el-table-column label="操作">
                   <template scope="scope">
                     <el-button
-                      @click="shipper(scope.row.order_id,scope.row.store_id,null)"
+                      @click="shipper(scope.row.order_id,scope.row.store_id,null,scope.row.id)"
                       type="text"
                       size="small"
                     >发货</el-button>
@@ -314,7 +314,7 @@
                     >确认收货</el-button>
                     <el-button
                       v-if="scope.row.supplier_status==2"
-                      @click="shipper(scope.row.order_id,scope.row.store_id,scope.row.order_product_id)"
+                      @click="shipper(scope.row.order_id,scope.row.store_id,scope.row.order_product_id,scope.row.id)"
                       type="text"
                       size="small"
                     >发货</el-button>
@@ -391,7 +391,7 @@
                 <el-table-column label="操作">
                   <template scope="scope">
                     <el-button
-                      @click="shipper(scope.row.order_id,scope.row.store_id,scope.row.order_product_id)"
+                      @click="shipper(scope.row.order_id,scope.row.store_id,scope.row.order_product_id,scope.row.id)"
                       type="text"
                       size="small"
                     >补发</el-button>
@@ -777,9 +777,17 @@ export default {
       this.expressName = obj.name
       console.log(obj.name);//我这边的name就是对应label的
       console.log(obj.code);
+      
     },
     // 发货保存中
     save(){
+      if(!this.express_num){
+        this.$message({
+          type: 'error',
+          message: '请填写完整信息'
+        });
+        return;
+      }
       var params = {send_type:this.type,order_id:this.orderId,express_id:this.expressCode,express_company:this.expressName,express_no:this.express_num,store_id:this.store_id,
       products:this.product,order_products:this.orderproduct,sku_data:this.sku_data};
       this.axios.post(this.mainUrl+'supplier.php?c=order&a=send_order',qs.stringify(params)).then(res=>{
@@ -812,6 +820,7 @@ export default {
             var params = {
               order_product_id: this.orderproduct, set_status: 4, id: this.returnId, order_id: this.orderId
             }
+            console.log(params)
             this.axios.post(this.mainUrl+'supplier.php?c=order&a=update', qs.stringify(params)).then(res => {
               console.log(res, params)
               let { err_code, err_msg } = res.data;
@@ -843,12 +852,13 @@ export default {
       })
     },
     // 发货补发货订单
-    shipper(a, b,c) {
-      console.log(a,b,c)
+    shipper(a, b,c,d) {
+      console.log(a,b,c,d)
       this.dialogTableVisible = true;
       console.log(a, b)
       this.orderId = a;
       this.store_id = b;
+      this.returnId = d;
       if(c==null){
         var params = { store_id: this.store_id, order_id: this.orderId ,order_type:1};
       }else{
@@ -862,6 +872,12 @@ export default {
           console.log(this.address)
           this.productList = err_msg.products;
           this.express = err_msg.express;
+          this.expressCode="";
+          this.expressName="";
+          this.express_num="";
+          this.orderproduct="";
+          this.product="";
+          this.sku_data=[];
         } else {
           // alert(err_msg.err_log)
           this.$message({
