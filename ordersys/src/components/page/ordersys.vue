@@ -42,6 +42,10 @@
               等待发货订单
               <el-button>{{sent_data}}</el-button>
             </li>
+            <li>
+              等待处理售后审核订单
+              <el-button>100</el-button>
+            </li>
             <li @click="waitSal">
               等待处理退货订单
               <el-button>{{refund_data}}</el-button>
@@ -162,6 +166,78 @@
               </el-table>
             </div>
 
+            <!-- 分页 -->
+            <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :page-size="15"
+              layout="total, prev, pager, next, jumper"
+              :total="total"
+            ></el-pagination>
+          </el-tab-pane>
+          <el-tab-pane label="售后审核订单" name="second" class="second">
+            <!-- 筛选 -->
+            <el-form ref="form" :model="form" label-width="80px">
+              <el-form-item label="订单号">
+                <el-input style="width:230px" v-model="order_no2"></el-input>
+              </el-form-item>
+              <el-form-item label="商品名称">
+                <el-input style="width:230px" v-model="goods_name2"></el-input>
+              </el-form-item>
+              <el-form-item label="商品编号">
+                <el-input style="width:230px" v-model="goods_code2"></el-input>
+              </el-form-item>
+              <el-form-item label="起止时间">
+                <el-col :span="4.5">
+                  <el-date-picker
+                    v-model="value3"
+                    align="right"
+                    type="datetime"
+                    placeholder="选择日期"
+                    :picker-options="pickerOptions1"
+                    style="width: 230px;margin-right:10px;"
+                  ></el-date-picker>
+                  <!-- <el-date-picker type="date" placeholder="选择日期" style="width: 100%;"></el-date-picker> -->
+                </el-col>
+                <el-col class="line" :span="0.5">-</el-col>
+                <el-col :span="4.5">
+                  <el-date-picker
+                    v-model="value4"
+                    align="right"
+                    type="datetime"
+                    placeholder="选择日期"
+                    :picker-options="pickerOptions1"
+                    style="width:230px;margin-left:10px;"
+                  ></el-date-picker>
+                </el-col>
+              </el-form-item>
+
+              <el-form-item>
+                <el-button class="btn1" type="primary" @click="onSubmit">筛选</el-button>
+                <el-button @click="open6">导出数据</el-button>
+              </el-form-item>
+            </el-form>
+            <!-- 表格 -->
+            <div style="margin-top:20px;padding:10px;background:rgb(242,248,254)">
+              <el-table :data="tableData2" border>
+                <el-table-column fixed prop="return_no" label="退货单号"></el-table-column>
+                <el-table-column fixed prop="order_no" label="订单号"></el-table-column>
+                <el-table-column prop="name" label="商品名称"></el-table-column>
+                <el-table-column prop="code" label="商品编号"></el-table-column>
+                <el-table-column prop="pro_num" label="数量" width="50px"></el-table-column>
+                <el-table-column prop="sku_data" label="商品规格"></el-table-column>
+                <el-table-column prop="supplier_status_msg" label="状态"></el-table-column>
+                <el-table-column prop="address_user" label="退货人" width="70px"></el-table-column>
+                <el-table-column prop="address_tel" label="退货人电话"></el-table-column>
+                <el-table-column prop="address" label="退货人地址"></el-table-column>
+                <el-table-column prop="dateline" label="申请退货时间"></el-table-column>
+                <el-table-column label="操作">
+                  <template slot-scope="scope">
+                    <el-button @click="auditCheck" type="text" size="small">审核</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
             <!-- 分页 -->
             <el-pagination
               @size-change="handleSizeChange"
@@ -558,7 +634,13 @@
                   <label class="label">物流公司：</label>
                 </div>
                 <el-select @change="selectGet" v-model="region" placeholder="请选择物流公司" width="220px">
-                  <el-option v-for="(item,index) in express" :label="item.name" :value="item.code"></el-option>
+                  <!-- <el-option>--请选择--</el-option> -->
+                  <el-option
+                    v-for="(item,index) in express"
+                    :key="item.pigcms_id"
+                    :label="item.name"
+                    :value="item.code"
+                  ></el-option>
                 </el-select>
               </div>
               <div class="model_row" v-if="radio=='1'">
@@ -579,6 +661,70 @@
             </div>
             <div style="text-align:right;">
               <el-button type="primary" @click="save" v-if="address.name!=''|| address.tel!=''">保存</el-button>
+            </div>
+          </el-dialog>
+
+          <el-dialog title="售后审核" :visible.sync="dialogTablefrom">
+            <div class="modelcontent">
+              <div class="model_row">
+                <div style="width:70px;text-align:right;display:inline;">
+                  <label class="label">审核状态：</label>
+                </div>
+                <div style="display:inline;">
+                  <el-radio v-model="radio" label="1">同意</el-radio>
+                  <el-radio v-model="radio" label="2">不同意</el-radio>
+                </div>
+              </div>
+              <div v-if="radio=='1'">
+                <div class="model_row">
+                  <div style="width:70px;text-align:right;display:inline;">
+                    <span class="label">售后类型：</span>
+                  </div>
+                  <el-select
+                    @change="selectGet"
+                    v-model="region"
+                    placeholder="请选择售后类型"
+                    width="220px"
+                  >
+                    <el-option
+                      v-for="(item,index) in express"
+                      :label="item.name"
+                      :value="item.code"
+                    ></el-option>
+                  </el-select>
+                </div>
+
+                <div>
+                  <div class="sales">退货信息</div>
+                  <div class="model_row sale">
+                    <div style="width:70px;text-align:right;display:inline;">
+                      <label class="label">退货地址：</label>
+                    </div>
+                    <span class="modeltext">{{address.tel}}</span>
+                  </div>
+                  <div class="model_row sale">
+                    <div style="width:70px;text-align:right;float:left;">
+                      <label class="label">收货人：</label>
+                    </div>
+                    <span class="modeltext">naomi</span>
+                  </div>
+                  <div class="model_row sale">
+                    <div style="width:70px;text-align:right;display:inline;">
+                      <label class="label">发货电话：</label>
+                    </div>
+                    <span class="modeltext">{{address.tel}}</span>
+                  </div>
+                </div>
+              </div>
+              <div v-if="radio=='2'">
+                <span style="float:left;">不同意理由：</span>
+                <div style="float:left;">
+                  <textarea name id cols="30" rows="3"></textarea>
+                </div>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <el-button type="primary" @click="save" v-if="address.name!=''|| address.tel!=''">确定</el-button>
             </div>
           </el-dialog>
         </el-tabs>
@@ -606,13 +752,15 @@ export default {
       productList: [],
       express: [],
       dialogTableVisible: false,
+      dialogTablefrom:false,
       store_id: '',
       returnId: '',
       orderId: '',
       productId: '',
       supplier: '',
       ruleList: [],
-      mainUrl: this.domain.testUrl,//公共域名
+      // mainUrl: this.domain.testUrl,//公共域名
+      mainUrl:'https://dev.qutego.com/',
       total: '',
       page: '1',
       type: '1',
@@ -743,21 +891,27 @@ export default {
     handleSelectionChange(val) {
       console.log(val)
       var a=[], b=[];
-      for(var i=0;i<val.length;i++){
-        var product=val[i].product_id;
-        var order_product=val[i].order_product_id;
-        a.push(product)
-        b.push(order_product)
-        if(a.length>1){
-          var product=a.join(',');
+      if(val.length>0){
+        for(var i=0;i<val.length;i++){
+          var product=val[i].product_id;
+          var order_product=val[i].order_product_id;
+          a.push(product)
+          b.push(order_product)
+          if(a.length>1){
+            var product=a.join(',');
+          }
+          if(b.length>1){
+            var order_product=b.join(',');
+          }
+          console.log(product,order_product)
+          this.product = product;
+          this.orderproduct = order_product;
         }
-        if(b.length>1){
-          var order_product=b.join(',');
-        }
-        console.log(product,order_product)
-        this.product = product;
-        this.orderproduct = order_product;
+      }else{
+        this.product = '';
+        this.orderproduct = '';
       }
+      
     },
     toggleSelection(rows) {
       console.log(rows)
@@ -781,7 +935,7 @@ export default {
     },
     // 发货保存中
     save(){
-      if(!this.express_num){
+      if(!this.express_num||!this.expressName){
         this.$message({
           type: 'error',
           message: '请填写完整信息'
@@ -851,6 +1005,10 @@ export default {
         }
       })
     },
+    // 审核
+    auditCheck(){
+      this.dialogTablefrom=true
+    },
     // 发货补发货订单
     shipper(a, b,c,d) {
       console.log(a,b,c,d)
@@ -878,6 +1036,7 @@ export default {
           this.orderproduct="";
           this.product="";
           this.sku_data=[];
+          this.region = '请选择物流公司'
         } else {
           // alert(err_msg.err_log)
           this.$message({

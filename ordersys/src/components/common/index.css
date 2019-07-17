@@ -12,12 +12,24 @@ table tbody {
 .modelcontent {
   margin-top: 20px;
 }
-.model_row {
-  padding-bottom: 15px;
+.model_row{
+  padding-bottom: 14px;
+  width:100%;
+}
+.sales{
+      padding-bottom: 20px;
+    font-weight: bold;
+    color: #393939;
+}
+.sale{
+  margin-left:10px;
 }
 .el-table th {
   background: #f3f6f9;
   height: 37px;
+}
+.el-dialog__body{
+  padding:0 20px 30px 20px;
 }
 /* table tbody tr:nth-child(even) {
   background: #ccdafa;
