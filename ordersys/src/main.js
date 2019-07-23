@@ -11,7 +11,13 @@ import 'element-ui/lib/theme-chalk/index.css'
 import Blob from '@/components/excel/Blob.js'
 import Export2Excel from '@/components/excel/Export2Excel.js'
 import domain from './domain.js'
+import Viewer from 'v-viewer'
+import 'viewerjs/dist/viewer.css'
 
+Vue.use(Viewer)
+Viewer.setDefaults({
+  Options: { 'inline': true, 'button': true, 'navbar': true, 'title': true, 'toolbar': true, 'tooltip': true, 'movable': true, 'zoomable': true, 'rotatable': true, 'scalable': true, 'transition': true, 'fullscreen': true, 'keyboard': true, 'url': 'data-source' }
+})
 Vue.use(elementui)
 Vue.use(vuerouter)
 Vue.config.productionTip = true

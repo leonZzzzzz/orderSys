@@ -42,9 +42,10 @@
               等待发货订单
               <el-button>{{sent_data}}</el-button>
             </li>
-            <li>
+            <!-- @click="serverSale" -->
+            <li @click="serverSale">
               等待处理售后审核订单
-              <el-button>100</el-button>
+              <el-button>{{aduit_data}}</el-button>
             </li>
             <li @click="waitSal">
               等待处理退货订单
@@ -175,22 +176,22 @@
               :total="total"
             ></el-pagination>
           </el-tab-pane>
-          <el-tab-pane label="售后审核订单" name="second" class="second">
+          <el-tab-pane label="售后审核订单" name="sixth" class="sixth">
             <!-- 筛选 -->
             <el-form ref="form" :model="form" label-width="80px">
               <el-form-item label="订单号">
-                <el-input style="width:230px" v-model="order_no2"></el-input>
+                <el-input style="width:230px" v-model="order_no6"></el-input>
               </el-form-item>
               <el-form-item label="商品名称">
-                <el-input style="width:230px" v-model="goods_name2"></el-input>
+                <el-input style="width:230px" v-model="goods_name6"></el-input>
               </el-form-item>
               <el-form-item label="商品编号">
-                <el-input style="width:230px" v-model="goods_code2"></el-input>
+                <el-input style="width:230px" v-model="goods_code6"></el-input>
               </el-form-item>
               <el-form-item label="起止时间">
                 <el-col :span="4.5">
                   <el-date-picker
-                    v-model="value3"
+                    v-model="value11"
                     align="right"
                     type="datetime"
                     placeholder="选择日期"
@@ -202,7 +203,7 @@
                 <el-col class="line" :span="0.5">-</el-col>
                 <el-col :span="4.5">
                   <el-date-picker
-                    v-model="value4"
+                    v-model="value12"
                     align="right"
                     type="datetime"
                     placeholder="选择日期"
@@ -214,26 +215,53 @@
 
               <el-form-item>
                 <el-button class="btn1" type="primary" @click="onSubmit">筛选</el-button>
-                <el-button @click="open6">导出数据</el-button>
               </el-form-item>
             </el-form>
             <!-- 表格 -->
             <div style="margin-top:20px;padding:10px;background:rgb(242,248,254)">
               <el-table :data="tableData2" border>
-                <el-table-column fixed prop="return_no" label="退货单号"></el-table-column>
+                <el-table-column fixed prop="return_no" label="售后编号"></el-table-column>
                 <el-table-column fixed prop="order_no" label="订单号"></el-table-column>
                 <el-table-column prop="name" label="商品名称"></el-table-column>
                 <el-table-column prop="code" label="商品编号"></el-table-column>
                 <el-table-column prop="pro_num" label="数量" width="50px"></el-table-column>
                 <el-table-column prop="sku_data" label="商品规格"></el-table-column>
-                <el-table-column prop="supplier_status_msg" label="状态"></el-table-column>
-                <el-table-column prop="address_user" label="退货人" width="70px"></el-table-column>
-                <el-table-column prop="address_tel" label="退货人电话"></el-table-column>
-                <el-table-column prop="address" label="退货人地址"></el-table-column>
-                <el-table-column prop="dateline" label="申请退货时间"></el-table-column>
+                <el-table-column prop="supplier_status_msg" label="售后类型"></el-table-column>
+                <el-table-column prop="content" label="原因" width="70px"></el-table-column>
+                <el-table-column prop="address_tel" label="手机号码"></el-table-column>
+                <el-table-column prop="remark" label="备注信息"></el-table-column>
+                <!-- <el-table-column prop="dateline" label="图片举证"></el-table-column> -->
+                <el-table-column label="图片举证">
+                  <template scope="scope">
+                    <viewer :images="photo" v-if="scope.row.images!='--'">
+                      <img
+                        style="width:40px;margin-left:10px;"
+                        v-for="(item,index) in scope.row.images"
+                        :src="item"
+                        :onerror="errorImg"
+                      />
+                    </viewer>
+                    <viewer v-else>
+                      <div>{{scope.row.images}}</div>
+                    </viewer>
+                  </template>
+                  <!-- <template scope="scope" v-else>
+                    <img
+                      style="width:40px;margin-left:10px;"
+                      v-for="(item,index) in scope.row.images"
+                      :src="item"
+                      :onerror="errorImg"
+                    />
+                  </template>-->
+                </el-table-column>
+                <el-table-column prop="dateline" label="申请时间"></el-table-column>
                 <el-table-column label="操作">
                   <template slot-scope="scope">
-                    <el-button @click="auditCheck" type="text" size="small">审核</el-button>
+                    <el-button
+                      @click="auditCheck(scope.row.id,scope.row.store_id,scope.row.address,scope.row.address_tel,scope.row.address_user,scope.row.type,scope.row.refund_type)"
+                      type="text"
+                      size="small"
+                    >审核</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -299,6 +327,8 @@
                 <el-table-column prop="pro_num" label="数量" width="50px"></el-table-column>
                 <el-table-column prop="sku_data" label="商品规格"></el-table-column>
                 <el-table-column prop="supplier_status_msg" label="状态"></el-table-column>
+                <el-table-column prop="express_company" label="物流公司"></el-table-column>
+                <el-table-column prop="express_no" label="物流单号"></el-table-column>
                 <el-table-column prop="address_user" label="退货人" width="70px"></el-table-column>
                 <el-table-column prop="address_tel" label="退货人电话"></el-table-column>
                 <el-table-column prop="address" label="退货人地址"></el-table-column>
@@ -375,6 +405,8 @@
                 <el-table-column prop="pro_num" label="数量" width="50px"></el-table-column>
                 <el-table-column prop="sku_data" label="商品规格"></el-table-column>
                 <el-table-column prop="supplier_status_msg" label="状态"></el-table-column>
+                <el-table-column prop="express_company" label="物流公司"></el-table-column>
+                <el-table-column prop="express_no" label="物流单号"></el-table-column>
                 <el-table-column prop="address_user" label="换货人" width="70px"></el-table-column>
                 <el-table-column prop="address_tel" label="换货人电话"></el-table-column>
                 <el-table-column prop="address" label="换货人地址"></el-table-column>
@@ -382,14 +414,13 @@
 
                 <el-table-column label="操作">
                   <template slot-scope="scope">
-                    <el-button
+                    <!-- <el-button
                       v-if="scope.row.supplier_status==0"
                       @click="tableClick(scope.row.supplier_status,scope.row.order_product_id,scope.row.id,scope.row.order_id)"
                       type="text"
                       size="small"
-                    >确认收货</el-button>
+                    >确认收货</el-button>-->
                     <el-button
-                      v-if="scope.row.supplier_status==2"
                       @click="shipper(scope.row.order_id,scope.row.store_id,scope.row.order_product_id,scope.row.id)"
                       type="text"
                       size="small"
@@ -587,6 +618,7 @@
           </el-tab-pane>
 
           <el-dialog title="商品发货" :visible.sync="dialogTableVisible">
+            <div style="height:30px;color:red;">收到退货后请及时寄出相应的换货商品</div>
             <el-table
               :data="productList"
               ref="products"
@@ -671,25 +703,25 @@
                   <label class="label">审核状态：</label>
                 </div>
                 <div style="display:inline;">
-                  <el-radio v-model="radio" label="1">同意</el-radio>
-                  <el-radio v-model="radio" label="2">不同意</el-radio>
+                  <el-radio v-model="iscon" label="3">同意</el-radio>
+                  <el-radio v-model="iscon" label="2">不同意</el-radio>
                 </div>
               </div>
-              <div v-if="radio=='1'">
+              <div v-if="iscon=='3'">
                 <div class="model_row">
                   <div style="width:70px;text-align:right;display:inline;">
                     <span class="label">售后类型：</span>
                   </div>
                   <el-select
-                    @change="selectGet"
-                    v-model="region"
+                    @change="afterselectSale"
+                    v-model="sales"
                     placeholder="请选择售后类型"
                     width="220px"
                   >
                     <el-option
-                      v-for="(item,index) in express"
+                      v-for="(item,index) in afterSale"
                       :label="item.name"
-                      :value="item.code"
+                      :value="item.type"
                     ></el-option>
                   </el-select>
                 </div>
@@ -700,31 +732,31 @@
                     <div style="width:70px;text-align:right;display:inline;">
                       <label class="label">退货地址：</label>
                     </div>
-                    <span class="modeltext">{{address.tel}}</span>
+                    <el-input style="width:230px" v-model="address_sit"></el-input>
                   </div>
                   <div class="model_row sale">
-                    <div style="width:70px;text-align:right;float:left;">
+                    <div style="width:70px;text-align:right;float:left;margin-right:4px;">
                       <label class="label">收货人：</label>
                     </div>
-                    <span class="modeltext">naomi</span>
+                    <el-input style="width:230px" v-model="address_user"></el-input>
                   </div>
                   <div class="model_row sale">
                     <div style="width:70px;text-align:right;display:inline;">
-                      <label class="label">发货电话：</label>
+                      <label class="label">收货电话：</label>
                     </div>
-                    <span class="modeltext">{{address.tel}}</span>
+                    <el-input style="width:230px" v-model="address_tel"></el-input>
                   </div>
                 </div>
               </div>
-              <div v-if="radio=='2'">
+              <div v-if="iscon=='2'">
                 <span style="float:left;">不同意理由：</span>
                 <div style="float:left;">
-                  <textarea name id cols="30" rows="3"></textarea>
+                  <textarea name id cols="30" rows="3" v-model="disagree"></textarea>
                 </div>
               </div>
             </div>
             <div style="text-align:right;">
-              <el-button type="primary" @click="save" v-if="address.name!=''|| address.tel!=''">确定</el-button>
+              <el-button type="primary" @click="confirm">确定</el-button>
             </div>
           </el-dialog>
         </el-tabs>
@@ -735,6 +767,7 @@
 <script>
 import axios from 'axios'
 let qs = require("qs");
+// import bigSrc from 'bigSrc.vue';
 export default {
   provide(){
     return{
@@ -743,11 +776,26 @@ export default {
   },
   data() {
     return {
+      afterSale:[
+        {name:'仅退款',type:'1'},
+        {name:'退货退款',type:'2'},
+        {name:'换货',type:'3'},
+        {name:'补发',type:'4'},
+      ],
+      saleId:'',
+      saleType:'',
+      refund_type:'',
+      address_sit:'',
+      address_tel:'',
+      address_user:'',
       url:'',
       isRouterAlive:true,
       express_num:'',
       region: '',
+      sales:'',
       radio: '1',
+      iscon:'3',
+      disagree:'',
       address: {},
       productList: [],
       express: [],
@@ -759,8 +807,8 @@ export default {
       productId: '',
       supplier: '',
       ruleList: [],
-      // mainUrl: this.domain.testUrl,//公共域名
-      mainUrl:'https://dev.qutego.com/',
+      mainUrl: this.domain.testUrl,//公共域名
+      // mainUrl:'https://dev.qutego.com/',
       total: '',
       page: '1',
       type: '1',
@@ -770,6 +818,7 @@ export default {
       refund_data: "",
       repair_data: "",
       sent_data: "",
+      aduit_data:"",
       activeName2: 'first',
       pickerOptions1: {
         // disabledDate(time) {
@@ -801,16 +850,19 @@ export default {
       order_no3: '',
       order_no4: '',
       order_no5: '',
+      order_no6:'',
       goods_name: '',
       goods_name2: '',
       goods_name3: '',
       goods_name4: '',
       goods_name5: '',
+      goods_name6:'',
       goods_code:'',
       goods_code2:'',
       goods_code3:'',
       goods_code4:'',
       goods_code5:'',
+      goods_code6:'',
       value1: '',
       value2: '',
       value3: '',
@@ -821,6 +873,8 @@ export default {
       value8: '',
       value9: '',
       value10: '',
+      value11:'',
+      value12:'',
       tableData: [],
       tableData2: [],
       currentPage1: 5,
@@ -931,7 +985,10 @@ export default {
       this.expressName = obj.name
       console.log(obj.name);//我这边的name就是对应label的
       console.log(obj.code);
-      
+    },
+    afterselectSale(e){
+      console.log(e)
+      this.saleId=e
     },
     // 发货保存中
     save(){
@@ -1005,9 +1062,58 @@ export default {
         }
       })
     },
+    confirm(){
+      if(this.iscon==3){
+        var params={id:this.salId,store_content:'',status:this.iscon,
+        store_id:this.store_id,return_type:this.saleId,sup_address:this.address_sit
+      ,sup_address_tel:this.address_tel,sup_address_user:this.address_user}
+      }else if(this.iscon==2){
+        var params={id:this.salId,store_content:this.disagree,status:this.iscon,store_id:this.store_id,return_type:'',sup_address:this.address_sit
+      ,sup_address_tel:this.address_tel,sup_address_user:this.address_user}
+      }
+      
+      this.axios.post(this.mainUrl+'supplier.php?c=order&a=aduit',qs.stringify(params)).then(res=>{
+        let { err_code, err_msg } = res.data;
+        console.log( err_code, err_msg)
+        if(err_code==0){
+          this.$message({
+            type: 'success',
+            message: err_msg
+          });
+          this.dialogTableVisible = false;
+          this.oninit();
+        }else{
+          this.$message({
+            type: 'error',
+            message: err_msg
+          });
+        }
+      })
+    },
     // 审核
-    auditCheck(){
+    auditCheck(a,b,c,d,e,f,g){
+      console.log(a,b,c,d,e,f,g)
       this.dialogTablefrom=true
+      this.salId=a;
+      this.store_id=b;
+      this.address_sit=c;
+      this.address_tel=d;
+      this.address_user=e;
+      this.saleType=f;
+      this.refund_type=g;
+      if((f==1&&g==1)||(f==1&&g==0)){
+        this.sales='退货退款'
+        this.saleId=2
+      }else if(f==1&&g==2){
+        this.sales='仅退款'
+        this.saleId=1
+      }else if(f==2){
+        this.sales='换货'
+        this.saleId=3
+      }else if(f==4){
+        this.sales='补发'
+        this.saleId=4
+      }
     },
     // 发货补发货订单
     shipper(a, b,c,d) {
@@ -1018,9 +1124,9 @@ export default {
       this.store_id = b;
       this.returnId = d;
       if(c==null){
-        var params = { store_id: this.store_id, order_id: this.orderId ,order_type:1};
+        var params = { store_id: this.store_id, order_id: this.orderId ,order_type:1,sup_id:this.id };
       }else{
-        var params = { store_id: this.store_id, order_id: this.orderId,order_product_id:c };
+        var params = { store_id: this.store_id, order_id: this.orderId,order_product_id:c,sup_id:this.id };
       }
       this.axios.post(this.mainUrl+'supplier.php?c=order&a=package_product', qs.stringify(params)).then(res => {
         console.log(res)
@@ -1036,7 +1142,7 @@ export default {
           this.orderproduct="";
           this.product="";
           this.sku_data=[];
-          this.region = '请选择物流公司'
+          this.region = '请选择物流公司';
         } else {
           // alert(err_msg.err_log)
           this.$message({
@@ -1069,6 +1175,7 @@ export default {
           this.refund_data = err_msg.refund_data;
           this.repair_data = err_msg.repair_data;
           this.sent_data = err_msg.sent_data;
+          this.aduit_data = err_msg.aduit_data;
         } else {
           this.$message({
             type: 'error',
@@ -1111,6 +1218,13 @@ export default {
         console.log(order_no,goods_name)
         var startdate = this.$moment(this.value9).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
         var enddate = this.$moment(this.value10).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
+      }else if(this.type==6){
+        var order_no = this.order_no6;
+        var goods_name = this.goods_name6;
+        var goods_code = this.goods_code6
+        console.log(order_no,goods_name)
+        var startdate = this.$moment(this.value11).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
+        var enddate = this.$moment(this.value12).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
       }
       var params = { code:goods_code,type: this.type, supplier_id: this.id, order_no: order_no, goods_name: goods_name, start_time: startdate, end_time: enddate, p: this.page };
       this.axios.post(this.mainUrl+'supplier.php?c=order&a=supplier_order', qs.stringify(params)).then(res => {
@@ -1120,7 +1234,7 @@ export default {
           if (this.type == 1 || this.type == 5) {
             this.total =Number(err_msg.count);
             this.tableData = err_msg.list;
-          } else if (this.type == 2 || this.type == 3 || this.type == 4) {
+          } else if (this.type == 2 || this.type == 3 || this.type == 4|| this.type == 6) {
             this.tableData2 = err_msg.list;
             this.total = Number(err_msg.count);
           }
@@ -1165,6 +1279,13 @@ export default {
         console.log(order_no,goods_name)
         var startdate = this.$moment(this.value9).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
         var enddate = this.$moment(this.value10).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
+      }else if(this.type==6){
+        var order_no = this.order_no6;
+        var goods_name = this.goods_name6;
+        var goods_code = this.goods_code6;
+        console.log(order_no,goods_name)
+        var startdate = this.$moment(this.value11).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
+        var enddate = this.$moment(this.value12).format('YYYY-MM-DD HH:mm:ss') //2019-04-11
       }
       var params = {code:goods_code, type: this.type, supplier_id: this.id, order_no: order_no, goods_name: goods_name, start_time: startdate, end_time: enddate, p: this.page };
       this.axios.post(this.mainUrl+'supplier.php?c=order&a=supplier_order', qs.stringify(params)).then(res => {
@@ -1177,7 +1298,7 @@ export default {
             if (this.type == 1 || this.type == 5) {
               this.total = Number(err_msg.count);
               this.tableData = err_msg.list;
-            } else if (this.type == 2 || this.type == 3 || this.type == 4) {
+            } else if (this.type == 2 || this.type == 3 || this.type == 4|| this.type == 6) {
               this.tableData2 = err_msg.list;
               this.total = Number(err_msg.count);
             } 
@@ -1205,6 +1326,8 @@ export default {
         this.type = 1
       } else if (eventid == 'tab-five') {
         this.type = 5
+      }else if(eventid=='tab-sixth'){
+        this.type=6
       }
       this.oninit()
     },
@@ -1249,6 +1372,17 @@ export default {
       this.goods_code4='';
       this.value7='';
       this.value8='';
+      this.page=1;
+      this.oninit()
+    },
+    serverSale(){
+      this.activeName2 = 'sixth'
+      this.type = 6
+      this.order_no6='';
+      this.goods_name6='';
+      this.goods_code6='';
+      this.value11='';
+      this.value12='';
       this.page=1;
       this.oninit()
     },
@@ -1352,7 +1486,7 @@ export default {
       }
         
         var params = { code:goods_code,type: this.type, supplier_id: this.id, order_no: order_no, goods_name: goods_name, start_time: startdate, end_time: enddate };
-        if (this.type == 2 || this.type == 3 || this.type == 4) {
+        if (this.type == 2 || this.type == 3 || this.type == 4||this.type==6) {
           var url = this.mainUrl+"supplier.php?c=order&a=out_return"
         } else if (this.type == 1 || this.type == 5) {
           var url = this.mainUrl+"supplier.php?c=order&a=out_send_order"

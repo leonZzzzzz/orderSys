@@ -168,8 +168,8 @@ export default {
       return{
         errflag:false,
         error:'',
-        // mainUrl:this.domain.testUrl,
-        mainUrl:"https://dev.qutego.com/",
+        mainUrl:this.domain.testUrl,
+        // mainUrl:"https://dev.qutego.com/",
         seen:false,
         name:null,
         pssw:null,
