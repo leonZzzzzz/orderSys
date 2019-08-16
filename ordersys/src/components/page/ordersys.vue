@@ -1,38 +1,7 @@
 <template>
   <div class="con">
-    <div class="header">
-      <img src="../../assets/logotitle.png" alt />
-      <span class="top-right">
-        {{name}}，欢迎您
-        <el-button type="danger" plain style="padding: 2px;margin-left: 20px;" @click="logout">退出</el-button>
-      </span>
-    </div>
     <div class="content-footer">
-      <div class="left">
-        <el-row>
-          <el-col>
-            <el-menu
-              default-active="1"
-              class="el-menu-vertical-demo"
-              @open="handleOpen"
-              @close="handleClose"
-              text-color="#000"
-              active-text-color="#409EFF"
-            >
-              <el-menu-item index="1">
-                <!-- <i class="el-icon-s-order"></i> -->
-                <img
-                  width="25px;"
-                  src="data:image/png;base64,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CoSaDJ2Z6GaYw5koEDgNM8zhzBQINRkqM9HNMIczUyDUZKjMRDfDHM5MgVCbQT4T3QxzOHs2ElJMnc9EN8Mczp2XhBVTLxsJoQw2ElaLJSwAClEgABSiQAAoRIEAUIgCAaAQBQJAIQoEgEIUCACFKBAAClEgABSiQAAoRIEAUIgCAaAQBQJAIQoEgEIUCACFKBAAClEgABSiQAAoRIEAUIgCAaAQBQJAIQoEgEIUCACFKJCqmR/L0u+8/XbZMaBSlsaVMezYsbJjMJACqZrLYm9+9a23yo4BVZIviVtj06FDZedgIAVSNXfEQzFuz56yY0CVpG/GpPh5V1fZORhIgVTNjXletG3eXHYMqJS/TR9OTa6LqlEgFdO3pGFy3rFxY9k5oEry0bwp/sB1UTUKpGIOTb2ko2XLli15afTEvoMHy84DZcpr48vxvQMHej53oLv5M9u2lZ2HgRRI5cyendKJE7E1Xx23rVxZdhoo1YfTzWn7ww9H3J9S6usrOw4DKZCK+uATF9z8gX2PPhqT4qvx/X37ys4Dv1HH0oNx0f79Yx7vfWXk1R0dZcfh9BRIRb2a/ipdlY4ejXG5JXa2tUVTrI3dOZedC95X/f/zN6OjYea8eftXt26b2NbbW3YsTk+BVFz3prmdLe2dnflj0Rv/+uCDZeeB91Nem+9NO5ct677gjunNm597ruw8vDcFUid6NhzYM/mxe++NqfGpWPP002XngfNqZjwen3vqqZ4bD97S3LZkSdlxODup7ADUKuecU2rMHdEV992XWtLVsWnx4uiOudGS/J7Uh/6lqg0xNy1/6KHujx24o/nHixZ5WV5f3HDqXNP9667adXzmzPh6fiD9aPXq+FX0xISJE8vOBafV/1HIC2lZw5MLFliqqm8KZJC4Mv9z/s88atT/Lu099s6Ou+6KKfGh9JO2tjQ3lscN48eXnY+hqX8fR0REuvyRRz74F6O7h32mvf3URyLUNQUyaN2Xc25oaBx76Wf37pk2Lc1peL5v+owZsTV/N9qmTctfillxrLk57YrRaV5jY6yJe/IvRowoOzV14t1To/OU6M2P9vSkh6IzRu7ZE38Zy9PkzZvzS+lracXGjT1PvtE8adPWrZamAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4//4PSUrn2CLk5uEAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTktMDYtMTJUMTg6NDE6MzQrMDg6MDBuq9mEAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE5LTA2LTEyVDE4OjQxOjM0KzA4OjAwH/ZhOAAAAE50RVh0c3ZnOmJhc2UtdXJpAGZpbGU6Ly8vaG9tZS9hZG1pbi9pY29uLWZvbnQvdG1wL2ljb25feDZnajVudjE0ei9hcnRpY2xlLWZpbGwuc3Zn/W7qawAAAABJRU5ErkJggg=="
-                  alt
-                />
-                <span slot="title">订单处理</span>
-              </el-menu-item>
-            </el-menu>
-          </el-col>
-        </el-row>
-      </div>
-      <div class="right">
+      <div class="right1">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item class="top-left">订单处理</el-breadcrumb-item>
         </el-breadcrumb>
@@ -226,7 +195,7 @@
                 <el-table-column prop="code" label="商品编号"></el-table-column>
                 <el-table-column prop="pro_num" label="数量" width="50px"></el-table-column>
                 <el-table-column prop="sku_data" label="商品规格"></el-table-column>
-                <el-table-column prop="supplier_status_msg" label="售后类型"></el-table-column>
+                <el-table-column prop="type_msg" label="售后类型"></el-table-column>
                 <el-table-column prop="content" label="原因" width="70px"></el-table-column>
                 <el-table-column prop="address_tel" label="手机号码"></el-table-column>
                 <el-table-column prop="remark" label="备注信息"></el-table-column>
@@ -751,7 +720,7 @@
               <div v-if="iscon=='2'">
                 <span style="float:left;">不同意理由：</span>
                 <div style="float:left;">
-                  <textarea name id cols="30" rows="3" v-model="disagree"></textarea>
+                  <textarea name id cols="30" rows="3" v-model="disagree" style="resize:none;"></textarea>
                 </div>
               </div>
             </div>
@@ -894,12 +863,15 @@ export default {
     this.name = this.$route.query.name;
     this.id = this.$route.query.id;
     if(!this.name || !this.id){
-      window.location.href =this.mainUrl+"supplier.php?c=index&a=index";
+      // window.location.href =this.mainUrl+"supplier.php?c=index&a=index";
     }else{
       this.dataStat();
       this.oninit();
       this.timer = setInterval(this.dataStat, 10000);
     } 
+  },
+  onShow(){
+    console.log(78787878)
   },
   created(){
     // this.timer = setInterval(this.dataStat, 10000);
@@ -911,6 +883,13 @@ export default {
     '$router': 'dataStat'
   },
   methods: {
+    goBill(){
+      var that = this;
+      that.$router.push({
+        path:'/billing',
+        // query:{id:err_msg.id,name:err_msg.name}
+      }) 
+    },
     reload(){
       this.isRouterAlive=false;
       this.$nextTick(()=>{
@@ -1080,7 +1059,7 @@ export default {
             type: 'success',
             message: err_msg
           });
-          this.dialogTableVisible = false;
+          this.dialogTablefrom = false;
           this.oninit();
         }else{
           this.$message({

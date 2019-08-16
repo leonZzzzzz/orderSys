@@ -211,6 +211,8 @@ export default {
           console.log(response)
           let {err_code,err_msg}=response.data
           var name = err_msg.name;
+          sessionStorage.setItem('id',err_msg.id)
+          sessionStorage.setItem('name',name)
           if(err_code==0){
             that.$router.push({
               path:'/ordersys',
