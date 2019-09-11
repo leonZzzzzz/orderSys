@@ -169,7 +169,7 @@ export default {
         errflag:false,
         error:'',
         mainUrl:this.domain.testUrl,
-        // mainUrl:"https://dev.qutego.com/",
+        // mainUrl:"https://grayscale.qutego.com/",
         seen:false,
         name:null,
         pssw:null,

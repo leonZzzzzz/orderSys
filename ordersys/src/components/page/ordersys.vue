@@ -197,7 +197,7 @@
                 <el-table-column prop="sku_data" label="商品规格"></el-table-column>
                 <el-table-column prop="type_msg" label="售后类型"></el-table-column>
                 <el-table-column prop="content" label="原因" width="70px"></el-table-column>
-                <el-table-column prop="address_tel" label="手机号码"></el-table-column>
+                <el-table-column prop="phone" label="手机号码"></el-table-column>
                 <el-table-column prop="remark" label="备注信息"></el-table-column>
                 <!-- <el-table-column prop="dateline" label="图片举证"></el-table-column> -->
                 <el-table-column label="图片举证">
@@ -598,6 +598,15 @@
             >
               <el-table-column type="selection"></el-table-column>
               <el-table-column property="name" label="商品"></el-table-column>
+              <!-- <el-table-column property="sku_data" label="规格"></el-table-column> -->
+              <el-table-column label="规格">
+                <template scope="scope">
+                  <span v-for="(item,index) in scope.row.skus">
+                    {{item.name}}:{{item.value}}
+                    <br />
+                  </span>
+                </template>
+              </el-table-column>
               <el-table-column property="pro_num" label="数量"></el-table-column>
             </el-table>
             <div class="modelcontent" v-if="address.name!='' || address.tel!=''">
@@ -695,7 +704,7 @@
                   </el-select>
                 </div>
 
-                <div>
+                <div v-if="saleId!='1'">
                   <div class="sales">退货信息</div>
                   <div class="model_row sale">
                     <div style="width:70px;text-align:right;display:inline;">
@@ -777,7 +786,7 @@ export default {
       supplier: '',
       ruleList: [],
       mainUrl: this.domain.testUrl,//公共域名
-      // mainUrl:'https://dev.qutego.com/',
+      // mainUrl:'https://grayscale.qutego.com/',
       total: '',
       page: '1',
       type: '1',
@@ -1277,7 +1286,7 @@ export default {
             if (this.type == 1 || this.type == 5) {
               this.total = Number(err_msg.count);
               this.tableData = err_msg.list;
-            } else if (this.type == 2 || this.type == 3 || this.type == 4|| this.type == 6) {
+            } else if (this.type == 2 || this.type == 3 || this.type == 4 || this.type == 6) {
               this.tableData2 = err_msg.list;
               this.total = Number(err_msg.count);
             } 
